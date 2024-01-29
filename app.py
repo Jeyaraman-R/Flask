@@ -93,4 +93,4 @@ def student():
 
 
 '''if __name__ == "__main__":
-    app.run(debug=False, host='10000')'''
+    app.run(debug=True)'''

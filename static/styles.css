@@ -1,0 +1,24 @@
+
+/*Media query for screens smaller than 600px(phones) */
+@media only screen and (max-width:600px)
+{
+    body {
+        font-size: 7px;
+        
+    }
+}
+/*Media query for screens between 600px and 1024px (tablets) */
+@media only screen and (min-width: 600px) and (max-width: 1024px)
+{
+    body{
+        font-size: 10px;
+
+    }
+}
+
+/*media query for screens larger than 1024px(laptop/desktop)*/
+@media only screen and (min-width:1025px){
+    body{
+        font-size: 12px;
+    }
+}
