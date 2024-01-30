@@ -71,7 +71,7 @@ def student():
         if 'logout' in request.form:
             #if 'userid' in session:
             session.pop('userid', None)
-            return redirect(url_for('example'))
+            return redirect(url_for('index'))
         
 
         uname=request.form['uname']
@@ -81,7 +81,7 @@ def student():
             if var.username==uname and var.password==upass:
                 session['userid']=var.id
                 g.record=1
-                return redirect(url_for('content'))
+                return redirect(url_for('content'), code=302)
             else:
                 g.record=0
         if g.record!=1:

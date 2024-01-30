@@ -1,9 +1,16 @@
+<!DOCTYPE html>
 <html>
+  {% extends 'base.html' %}    
+
+{% block content %}
+
 <head>
   <center> Contents</center> 
 
-</head><body><center>
-<form method="POST" action="{{url_for('student')}}">
+</head><body>
+  kjagsdjhgsjdgjsagdjhasgsdjahsgdj
+  <center>
+<form method="POST" action="{{url_for('student')}}" target="_top">
    
     <input type="submit" name="logout" value="Log Out">
 
@@ -11,4 +18,5 @@
 </form>
 </center>
 </body>
+{% endblock %}  
 </html>

@@ -1,11 +1,16 @@
+<!DOCTYPE html>
 <html>
+{% extends 'base.html' %}    
+
+{% block content %}
+
 <Title>
 Welcome to OSAI
-</title><body bgcolor="White" text="white">
+</title>
 
-<body style="background-image: url('{{url_for('static', filename='images/back1.jpg')}}');">
+<!--<body style="background-image: url('{{url_for('static', filename='images/back1.jpg')}}'); background-repeat: no-repeat; background-size: cover;">
 
-</body style>
+</body style>-->
 <bgsound src="D:\jeyaraman Wfh\9044\Image\cello.wav">
  <B>
 <Center><font face="snap ITC">
@@ -14,8 +19,8 @@ OSAI INFOTECH</font>
 </B>
 <center><small><font color="black" face="magneto">Succes Through Hardwork</font>
 </center></small><hr size=3>
-</body></html>
-<marquee bgcolor="white" Direction="Left"><font color="grey" face="magneto">Welcome to Osai-Infotech {{username}}: Your Pathway to Programming Success</font></Marquee>
+
+<marquee Direction="Left"><font color="grey" face="magneto">Welcome to Osai-Infotech by {{username}}: Your Pathway to Programming Success</font></Marquee>
 <br><br><center>
 <img Src="{{url_for('static', filename='images/yes.jpg')}}" class="img img-circle" alt="Template"></center>
 <br><center>Join the Programming Revolution Today!</center>
@@ -30,7 +35,9 @@ at OSAI-INFOTECH, we are passionate about computer programming and committed
 to providing high-quality coaching and training to individuals who want to excel in this field.
 Whether you're a beginner or an experienced programmer, 
 our comprehensive courses, expert instructors, and personalized approach can help you achieve your goals. 
- </b></p></font><br><font color="white">
+ </b></p></font><br>
+ <div style="justify-content: space-between;">
+ <font color="purple">
 Our Courses:
 <ol type="1" start="1">
 <li>Programming Fundamentals:<ol>This course is designed for beginners who want to learn the basics of computer programming.
@@ -48,9 +55,10 @@ You'll also gain hands-on experience with real-world datasets and projects.</ol>
 <li>Software Engineering:<ol>This course is aimed at advanced programmers who want to develop their software engineering skills. 
 You'll learn how to design, implement, and test software systems using modern software engineering principles and practices. Our instructors 
 will cover topics such as software architecture, design patterns, testing, and deployment.</ol></ol></font><br>
-
-
-
+</div>
+</body>
+{% endblock %}  
+</html>
 
 
 

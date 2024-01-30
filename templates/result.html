@@ -1,4 +1,10 @@
-<html><h3><center><b>APPLICATION HAS BEEN SUBMITTED</b></center></h3>
+<!DOCTYPE html>
+<html>
+    {% extends 'base.html' %}    
+
+    {% block content %}
+    
+<h3><center><b>APPLICATION HAS BEEN SUBMITTED</b></center></h3>
 <body>
 <center>
 {{name}}<br>
@@ -12,4 +18,5 @@
 <a href="{{url_for('source')}}"">Click To Home Page</a></center>
 
 </body>
+{% endblock %}  
 </html>

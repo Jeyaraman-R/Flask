@@ -1,4 +1,9 @@
+<!DOCTYPE html>
 <html>
+    {% extends 'base.html' %}    
+
+    {% block content %}
+    
 <h2><Center>
 <b><i><u><font face="snap ITC" color="black">Vision</u></b></i></font>
 </Center>
@@ -6,8 +11,8 @@
 Osai InfoTech
 </title></h2>
 <body bgcolor="" Text="black">
-<body style="background-image:url('{{url_for('static', filename='images/hi.jpg')}}');">
-</body style>
+<!--<body style="background-image:url('{{url_for('static', filename='images/hi.jpg')}}'); background-size: fill; background-repeat: no-repeat;">
+</body style>-->
 
 <p align="justify"><font face="Times new roman"><i>
 
@@ -17,10 +22,12 @@ and shape the future of technology.
 expression and problem-solving. We aim to foster a passion for 
 programming and equip our students with the expertise to succeed in the dynamic and ever-evolving field of technology.</font></p></i><hr size=3>
 <br><br>
-<center>
-<A Href="{{url_for('student')}}">Student Login
+<div style="position: fixed; bottom: 50%; left: 40%;">
 
-</A></center><br><br><br>
+<A Href="{{url_for('student')}}" target="_top">Student Login
+
+</A></div>
+<div style="position: fixed; bottom: 0;">
 <font color="purple">
 <u><b>Visit Us:</u></b><br>
 Osai-Infotech<br>
@@ -28,6 +35,7 @@ Osai-Infotech<br>
 Thathaneri, Tamilnadu, 625018<br>
 India
 
-</f></f>
+</f></f></div>
 </body>
+{% endblock %}  
 </html>

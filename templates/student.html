@@ -1,10 +1,15 @@
+<!DOCTYPE html>
 <html>
+    {% extends 'base.html' %}    
+
+    {% block content %}
+        
    <center> <h3>Student Login</h3></center>
   
 <br>
-<body style="background-image: url('{{url_for('static', filename='images/back1.jpg')}}');">
-</body style>
-<form method="POST" action="/student">
+<!--<body style="background-image: url('{{url_for('static', filename='images/back1.jpg')}}'); background-repeat: no-repeat; background-size: cover;">
+</body style>-->
+<form method="POST" action="/student"> 
     <center>
     <label>Username:</label>
     <input type="text" name="uname"></center><br>
@@ -15,5 +20,5 @@
     <input type="submit" value="Login"> </center>
 </form>
 
-    
+{% endblock %}     
 </html>

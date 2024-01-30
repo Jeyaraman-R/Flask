@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+   {% extends 'base.html' %}    
+
+   {% block content %}
+ 
 <head>
   <center>Application Form!</center> <br>
 </head>
 <body><center>
    <form action="/application" method="post" enctype="multipart/form-data">
-<table border="3"><tr><th>Name</th><th><input type="text" name="name"></th></tr>
+<table border="3"><tr><th>Name</th><th><input type="text" name="name" required></th></tr>
    <tr><th>Age</th><th><input type="number" name="age"></th></tr>
    <tr><th>Course Name</th><th><input type="text" name="course_name"></th></tr>
    <tr><th>Address</th><th><input type="text" name="address"></th></tr>
@@ -26,4 +30,5 @@
   </form>
    </center>
 </body>
+{% endblock %}  
 </html>
