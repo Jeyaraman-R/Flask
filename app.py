@@ -1,12 +1,28 @@
 from flask import Flask, render_template, request, redirect, url_for, session, g
+from flask_mailman import Mail, EmailMessage
 import os
-
 app = Flask(__name__)
+mail=Mail()
+mail.init_app(app)
 app.secret_key = "123"
 app.config['upload_folder'] = "static/files"
 
+
+
 if not os.path.exists(app.config['upload_folder']):
     os.makedirs(app.config['upload_folder'])
+
+
+def mail_con(mail_id, mail):
+    print("Mail function called with recipient:", mail_id)  
+    try:            
+        message="Thank you"
+        body="thank you"
+        msg=EmailMessage(message, body, 'ramfreelancer2021@gmail.com',[mail_id])
+        msg.send()
+        print("Email sent successfully to:", mail_id) 
+    except Exception as e:
+        print("Error sending email:", str(e))
 
 @app.route('/')
 def index():
@@ -26,8 +42,7 @@ def process():
     return render_template("process.html")
 
 @app.route('/application', methods=["POST", "GET"])
-def application():
-    
+def application():                       
     if request.method == 'POST':
         name = request.form.get('name')
         age = request.form.get('age')
@@ -35,7 +50,21 @@ def application():
         contact = request.form.get('contact')
         mail_id = request.form.get('mail_id')
         upload_file(request)
-        return render_template("result.html", name=name, age=age, course_name=course_name, contact=contact, mail_id=mail_id)    
+        #send_email = request.form.get('send_email')  
+        if 'send_email' in request.form:  # If the checkbox is checked
+            print("Checkbox is checked. Calling mail_con function.")
+            app.config['MAIL_HOST']='smtp.gmail.com'
+            app.config['MAIL_PORT']= 465
+            app.config['MAIL_USE_TLS']= False
+            app.config['MAIL_USE_SSL']= True
+            app.config['MAIL_USERNAME']='ramfreelancer2021@gmail.com'
+            app.config['MAIL_PASSWORD']='alqtaryjfwsdtcfq'
+            mail_con(mail_id, mail)
+            return render_template("result.html", name=name, age=age, course_name=course_name, contact=contact, mail_id=mail_id)    
+            
+        else:
+            print("Checkbox is not checked. Not calling mail_con function.")
+            return render_template("result.html", name=name, age=age, course_name=course_name, contact=contact, mail_id=mail_id)    
     else:
         return render_template("application.html")
 
@@ -46,7 +75,6 @@ def upload_file(request):
         upload_pdf.save(filepath)
 
 @app.route("/content")
-
 def content():
     return render_template("content.html")
 
@@ -92,5 +120,5 @@ def student():
     return render_template("student.html")
 
 
-'''if __name__ == "__main__":
-    app.run(debug=True)'''
+if __name__ == "__main__":
+    app.run(debug=True)
