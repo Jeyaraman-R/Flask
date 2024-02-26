@@ -1,28 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, session, g
-from flask_mailman import Mail, EmailMessage
+from flask_mail import Mail, Message
 import os
 app = Flask(__name__)
-mail=Mail()
-mail.init_app(app)
 app.secret_key = "123"
 app.config['upload_folder'] = "static/files"
 
-
-
 if not os.path.exists(app.config['upload_folder']):
     os.makedirs(app.config['upload_folder'])
-
-
-def mail_con(mail_id, mail):
-    print("Mail function called with recipient:", mail_id)  
-    try:            
-        message="Thank you"
-        body="thank you"
-        msg=EmailMessage(message, body, 'ramfreelancer2021@gmail.com',[mail_id])
-        msg.send()
-        print("Email sent successfully to:", mail_id) 
-    except Exception as e:
-        print("Error sending email:", str(e))
 
 @app.route('/')
 def index():
@@ -42,24 +26,37 @@ def process():
     return render_template("process.html")
 
 @app.route('/application', methods=["POST", "GET"])
-def application():                       
+def application():
+    def mail_con(mail_id):
+        print("Mail function called with recipient:", mail_id) 
+        try:            
+            message="Thank you"
+            body="thank you"
+            msg=Message(message, sender='ramfreelancer2021@gmail.com', recipients=[mail_id])
+            msg.body=body
+            mail.send(msg)
+            print("Email sent successfully to:", mail_id) 
+        except Exception as e:
+            print("Error sending email:", str(e))
+
     if request.method == 'POST':
         name = request.form.get('name')
         age = request.form.get('age')
         course_name = request.form.get('course_name')
-        contact = request.form.get('contact')
         mail_id = request.form.get('mail_id')
+        contact = request.form.get('contact')
         upload_file(request)
+        app.config['MAIL_SERVER']='smtp.gmail.com'
+        app.config['MAIL_PORT']= 465
+        app.config['MAIL_USE_TLS']= False
+        app.config['MAIL_USE_SSL']= True
+        app.config['MAIL_USERNAME']='ramfreelancer2021@gmail.com'
+        app.config['MAIL_PASSWORD']='alqtaryjfwsdtcfq' 
+        mail=Mail(app)
         #send_email = request.form.get('send_email')  
         if 'send_email' in request.form:  # If the checkbox is checked
-            print("Checkbox is checked. Calling mail_con function.")
-            app.config['MAIL_HOST']='smtp.gmail.com'
-            app.config['MAIL_PORT']= 465
-            app.config['MAIL_USE_TLS']= False
-            app.config['MAIL_USE_SSL']= True
-            app.config['MAIL_USERNAME']='ramfreelancer2021@gmail.com'
-            app.config['MAIL_PASSWORD']='alqtaryjfwsdtcfq'
-            mail_con(mail_id, mail)
+            print("Checkbox is checked. Calling mail_con function.") 
+            mail_con(mail_id)
             return render_template("result.html", name=name, age=age, course_name=course_name, contact=contact, mail_id=mail_id)    
             
         else:
