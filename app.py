@@ -30,8 +30,17 @@ def application():
     def mail_con(mail_id):
         print("Mail function called with recipient:", mail_id) 
         try:            
-            message="Thank you"
-            body="thank you"
+            message="Submission Received"
+            body='''Thank you for reaching out to us! We have received your email regarding [briefly summarize the subject or content of the user's email]. We appreciate you taking the time to contact us.
+
+Our team is currently reviewing your message and will get back to you as soon as possible. Please rest assured that your inquiry is important to us, and we will do our best to address it promptly.
+
+If you have any additional information or questions in the meantime, feel free to reply to this email, and we'll be happy to assist you further.
+
+Once again, thank you for contacting us. We look forward to resolving your inquiry to your satisfaction.
+
+Best regards,
+Team Osai'''
             msg=Message(message, sender='ramfreelancer2021@gmail.com', recipients=[mail_id])
             msg.body=body
             mail.send(msg)
