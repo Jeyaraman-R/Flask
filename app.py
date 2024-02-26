@@ -31,7 +31,7 @@ def application():
         print("Mail function called with recipient:", mail_id) 
         try:            
             message="Submission Received"
-            body='''Thank you for reaching out to us! We have received your email regarding [briefly summarize the subject or content of the user's email]. We appreciate you taking the time to contact us.
+            body='''Thank you for reaching out to us! We have received your email regarding application submisson. We appreciate you taking the time to contact us.
 
 Our team is currently reviewing your message and will get back to you as soon as possible. Please rest assured that your inquiry is important to us, and we will do our best to address it promptly.
 
@@ -126,5 +126,5 @@ def student():
     return render_template("student.html")
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+'''if __name__ == "__main__":
+    app.run(debug=True)'''
