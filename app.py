@@ -61,6 +61,8 @@ Team Osai'''
         app.config['MAIL_USE_SSL']= True
         app.config['MAIL_USERNAME']='ramfreelancer2021@gmail.com'
         app.config['MAIL_PASSWORD']='alqtaryjfwsdtcfq' 
+        app.config['MAIL_DEFAULT_SENDER'] = ('Osai InfoTech', 'ramfreelancer2021@gmail.com')
+
         mail=Mail(app)
         #send_email = request.form.get('send_email')  
         if 'send_email' in request.form:  # If the checkbox is checked
@@ -124,7 +126,6 @@ def student():
         
 
     return render_template("student.html")
-
 
 '''if __name__ == "__main__":
     app.run(debug=True)'''
