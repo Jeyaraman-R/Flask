@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  {% extends 'base.html' %}    
+
+{% block content %}
+
+<head>
+  <center>  admin-content</center> 
+
+</head><body><center>
+ 
+  <center>
+    <div style="bottom: 50%;">
+<form method="POST" action="{{url_for('admin')}}" target="_top">
+   
+    <input type="submit" name="logout" value="Log Out">
+
+
+</form>
+</center></center></div>
+</body>
+{% endblock %}  
+</html>

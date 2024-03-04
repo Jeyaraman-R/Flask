@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    {% extends 'base.html' %}    
+
+    {% block content %}
+    <center><h3>Welcome To Osai_InfoTech</h3>   </center> 
+   <center> <h3>Admin Login</h3></center>
+  
+<br>
+<!--<body style="background-image: url('{{url_for('static', filename='images/back1.jpg')}}'); background-repeat: no-repeat; background-size: cover;">
+</body style>-->
+<form method="POST" action="/admin"> 
+    <center>
+    <label>Username:</label>
+    <input type="text" name="aname"></center><br>
+    <center>
+    <label>Password:</label>
+    <input type="password" name="apass"></center><br>
+    <center>
+    <input type="submit" value="Login"> </center>
+</form>
+
+{% endblock %}     
+</html>

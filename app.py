@@ -1,13 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, session, g
 from flask_mail import Mail, Message
+from flask_mysqldb import MySQL
 import os
 app = Flask(__name__)
 app.secret_key = "123"
+#File Upload
 app.config['upload_folder'] = "static/files"
 
 if not os.path.exists(app.config['upload_folder']):
     os.makedirs(app.config['upload_folder'])
 
+#DB configuration
+app.config['MYSQL_HOST']="localhost"
+app.config['MYSQL_USER']="root"
+app.config['MYSQL_PASSWORD']="SYSTEM"
+app.config['MYSQL_DB']="ram"
+app.config['MYSQL_CURSORCLASS']="DictCursor"
+mysql=MySQL(app)
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -31,7 +40,7 @@ def application():
         print("Mail function called with recipient:", mail_id) 
         try:            
             message="Submission Received"
-            body='''Thank you for reaching out to us! We have received your email regarding application submisson. We appreciate you taking the time to contact us.
+            body='''Thank you for reaching out to us! We have received your response regarding application submisson. We appreciate you taking the time to contact us.
 
 Our team is currently reviewing your message and will get back to you as soon as possible. Please rest assured that your inquiry is important to us, and we will do our best to address it promptly.
 
@@ -55,6 +64,7 @@ Team Osai'''
         mail_id = request.form.get('mail_id')
         contact = request.form.get('contact')
         upload_file(request)
+        #Email Configuration
         app.config['MAIL_SERVER']='smtp.gmail.com'
         app.config['MAIL_PORT']= 465
         app.config['MAIL_USE_TLS']= False
@@ -93,10 +103,10 @@ class User():
         self.username= username
         self.password= password
 
-users=[]
+'''users=[]
 users.append(User(id=1, username= "jey", password="12345"))
 users.append(User(id=2, username= "ram", password="56789"))
-users.append(User(id=3, username= "kesavan", password="1996"))
+users.append(User(id=3, username= "kesavan", password="1996"))'''
 
 @app.route("/student", methods=["POST", "GET"])
 
@@ -105,14 +115,35 @@ def student():
         '''This is a logout button which is in content page, here i am redirecting a
         page without creating separate route for logout'''
         if 'logout' in request.form:
-            #if 'userid' in session:
-            session.pop('userid', None)
+            #if 'id' in session:
+            session.pop('id', None)
             return redirect(url_for('index'))
         
-
+        #From Html
         uname=request.form['uname']
         upass=request.form['upass']
-        
+        #From DB
+        try:
+            cur=mysql.connection.cursor()
+            cur.execute("select * from admin where uname=%s and upass=%s", [uname, upass])
+            users=cur.fetchone()
+            if users:
+                session["id"]=users["id"]
+                g.record=1
+                return redirect(url_for('content'), code=302)
+            else:
+                g.record=0
+            if g.record!=1:
+                return redirect(url_for('student'))
+        except Exception as d:
+            print(d)
+        finally:
+            mysql.connection.commit()
+            cur.close()
+                      
+    return render_template("student.html")
+    
+'''
         for var in users:
             if var.username==uname and var.password==upass:
                 session['userid']=var.id
@@ -121,11 +152,46 @@ def student():
             else:
                 g.record=0
         if g.record!=1:
-            return redirect(url_for('student'))
+            return redirect(url_for('student'))'''
         
         
+@app.route("/adcon")
+def adcon():
+    return render_template("adcon.html")
+    
 
-    return render_template("student.html")
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if request.method=='POST':
+        '''This is a logout button which is in content page, here i am redirecting a
+        page without creating separate route for logout'''
+        if 'logout' in request.form:
+            #if 'id' in session:
+            session.pop('aid', None)
+            return redirect(url_for('admin'))
+        
+        #From Html
+        aname=request.form.get('aname')
+        apass=request.form.get('apass')
+        #From DB
+        try:
+            cur=mysql.connection.cursor()
+            cur.execute("select * from admin where uname=%s and upass=%s", [aname, apass])
+            ausers=cur.fetchone()
+            if ausers:
+                session["aid"]=ausers["id"]
+                g.record=1
+                return redirect(url_for('adcon'), code=302)
+            else:
+                g.record=0
+            if g.record!=1:
+                return redirect(url_for('admin'))
+        except Exception as d:
+            print(d)
+        finally:
+            mysql.connection.commit()
+            cur.close()
+    return render_template("admin.html")
 
-'''if __name__ == "__main__":
-    app.run(debug=True)'''
+if __name__ == "__main__":
+    app.run(debug=True)
