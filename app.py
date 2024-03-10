@@ -1,22 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, session, g
 from flask_mail import Mail, Message
 from flask_mysqldb import MySQL
+from database.config import config
 import os
 app = Flask(__name__)
 app.secret_key = "123"
 #File Upload
 app.config['upload_folder'] = "static/files"
+app.config.from_object(config)
+mysql=MySQL(app)
 
 if not os.path.exists(app.config['upload_folder']):
     os.makedirs(app.config['upload_folder'])
 
 #DB configuration
-app.config['MYSQL_HOST']="localhost"
+'''app.config['MYSQL_HOST']="localhost"
 app.config['MYSQL_USER']="root"
 app.config['MYSQL_PASSWORD']="SYSTEM"
 app.config['MYSQL_DB']="ram"
 app.config['MYSQL_CURSORCLASS']="DictCursor"
-mysql=MySQL(app)
+mysql=MySQL(app)'''
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -24,6 +27,7 @@ def index():
 @app.route('/example')
 def example():
     return render_template("example.html")
+
 
 @app.route('/source')
 def source():
@@ -108,6 +112,28 @@ users.append(User(id=1, username= "jey", password="12345"))
 users.append(User(id=2, username= "ram", password="56789"))
 users.append(User(id=3, username= "kesavan", password="1996"))'''
 
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    try:
+        if request.method=='POST':
+            uname=request.form['uname']
+            upass=request.form['upass']
+            cpass=request.form['ucpass']
+            if upass==cpass:
+                cur1=mysql.connection.cursor()
+                cur1.execute("insert into users(usname, pass) values (%s,%s)", (uname, upass))
+                # Commit changes to the database
+                mysql.connection.commit()
+                
+                # Close the cursor
+                cur1.close()
+                return redirect(url_for('index'))
+    except Exception as d:
+        print(d)
+        mysql.connection.rollback()
+    return render_template('register.html')
+
 @app.route("/student", methods=["POST", "GET"])
 
 def student():
@@ -125,7 +151,7 @@ def student():
         #From DB
         try:
             cur=mysql.connection.cursor()
-            cur.execute("select * from admin where uname=%s and upass=%s", [uname, upass])
+            cur.execute("select * from users where usname=%s and pass=%s", [uname, upass])
             users=cur.fetchone()
             if users:
                 session["id"]=users["id"]

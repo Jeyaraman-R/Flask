@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+{% extends 'base.html' %}    
+
+{% block content %}
+
+<h3>
+    <center>Register Form</center>
+</h3>
+<body>
+<center>
+<form action="" method="post" enctype="multipart/form-data">
+<table><tr><th>
+    <p align="right">
+    Username</p></th>
+<th>
+<input type="text" name="uname" required></th></tr>
+<tr><th><p align="right">
+    Password</p>
+</th><th>
+    <input type="password" name="upass" required>
+</th>
+</tr>
+<tr>
+<th>
+    <p align="right">
+    Conform Password</p>
+    
+</th>
+<th>    <input type="password" name="ucpass" required>
+    
+</th>
+</tr>
+</table><br>
+<input type="submit" value="submit"><input type="reset" value="clear">
+</form> </center>
+
+</body>
+
+{% endblock %}  
+</html>
+ 
