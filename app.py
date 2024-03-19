@@ -1,15 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, session, g
 from flask_mail import Mail, Message
-from flask_mysqldb import MySQL
-from database.config import config
+import psycopg2 
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects import postgresql
+from sqlalchemy import text
+#from sqlalchemy import create_engine
+#from flask_mysqldb import MySQL
+#from database.config import config
 import os
 app = Flask(__name__)
 app.secret_key = "123"
 #File Upload
 app.config['upload_folder'] = "static/files"
-app.config.from_object(config)
-mysql=MySQL(app)
-
+#app.config.from_object(config)
+#mysql=MySQL(app)
+app.config['SQLALCHEMY_DATABASE_URI']='postgresql://root:PYohqeXEmcz8aLiJINZ7VGVbjbCgDcCe@dpg-cnrv0pol5elc73b39vgg-a.oregon-postgres.render.com/ram_mqj4'
+db=SQLAlchemy(app)
+#engine=create_engine('postgresql://root:PYohqeXEmcz8aLiJINZ7VGVbjbCgDcCe@dpg-cnrv0pol5elc73b39vgg-a.oregon-postgres.render.com/ram_mqj4')
 if not os.path.exists(app.config['upload_folder']):
     os.makedirs(app.config['upload_folder'])
 
@@ -121,17 +128,19 @@ def register():
             upass=request.form['upass']
             cpass=request.form['ucpass']
             if upass==cpass:
-                cur1=mysql.connection.cursor()
-                cur1.execute("insert into users(usname, pass) values (%s,%s)", (uname, upass))
+                #cur1=db.connect()
+                db.session.begin()
+                db.session.execute(text("insert into users(usname, pass) values (:uname,:upass)"),{"uname":uname,"upass":upass})
                 # Commit changes to the database
-                mysql.connection.commit()
+                db.session.commit()
                 
                 # Close the cursor
-                cur1.close()
+                #cur1.close()
+                db.session.close()
                 return redirect(url_for('index'))
     except Exception as d:
         print(d)
-        mysql.connection.rollback()
+        db.session.rollback()
     return render_template('register.html')
 
 @app.route("/student", methods=["POST", "GET"])
@@ -150,11 +159,12 @@ def student():
         upass=request.form['upass']
         #From DB
         try:
-            cur=mysql.connection.cursor()
-            cur.execute("select * from users where usname=%s and pass=%s", [uname, upass])
-            users=cur.fetchone()
+            db.session.begin()
+            data=db.session.execute(text("select * from users where usname=:uname AND pass=:upass"), {"uname":uname, "upass":upass})
+            users=data.fetchone()
             if users:
-                session["id"]=users["id"]
+                user_id = users[0] 
+                session["id"]=user_id
                 g.record=1
                 return redirect(url_for('content'), code=302)
             else:
@@ -164,8 +174,9 @@ def student():
         except Exception as d:
             print(d)
         finally:
-            mysql.connection.commit()
-            cur.close()
+            db.session.commit()
+            #cur.close()
+            db.session.close()
                       
     return render_template("student.html")
     
@@ -201,11 +212,15 @@ def admin():
         apass=request.form.get('apass')
         #From DB
         try:
-            cur=mysql.connection.cursor()
-            cur.execute("select * from admin where uname=%s and upass=%s", [aname, apass])
-            ausers=cur.fetchone()
+            #cur=db.session()
+            #cur5=engine.connect()
+            #cur6=cur5.begin()
+            db.session.begin()
+            data1=db.session.execute(text("select * from admin where uname=:aname and upass=:apass"),{"aname":aname, "apass":apass})
+            ausers=data1.fetchone()
             if ausers:
-                session["aid"]=ausers["id"]
+                ausers_id=ausers[0]
+                session["aid"]=ausers_id
                 g.record=1
                 return redirect(url_for('adcon'), code=302)
             else:
@@ -215,9 +230,10 @@ def admin():
         except Exception as d:
             print(d)
         finally:
-            mysql.connection.commit()
-            cur.close()
+            db.session.commit()
+            #cur.close()
+            db.session.close()
     return render_template("admin.html")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+'''if __name__ == "__main__":
+    app.run(debug=True)'''
