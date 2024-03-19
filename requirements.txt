@@ -22,3 +22,4 @@ gunicorn==20.1.0
 flask_mail
 flask_mysqldb
 flask_sqlalchemy
+psycopg2
