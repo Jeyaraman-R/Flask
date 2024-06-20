@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session, g
+from flask import Flask, render_template, request, redirect, url_for, session, g, current_app
 from flask_mail import Mail, Message
 import psycopg2 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import text
+from admin_cont.admin_con import con
 #from sqlalchemy import create_engine
 #from flask_mysqldb import MySQL
 #from database.config import config
@@ -14,7 +15,7 @@ app.secret_key = "123"
 app.config['upload_folder'] = "static/files"
 #app.config.from_object(config)
 #mysql=MySQL(app)
-app.config['SQLALCHEMY_DATABASE_URI']='postgresql://root:PYohqeXEmcz8aLiJINZ7VGVbjbCgDcCe@dpg-cnrv0pol5elc73b39vgg-a.oregon-postgres.render.com/ram_mqj4'
+app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgre_m9bf_user:2yaD0gAHbOiQissvo8noDzkahq5y2MFg@dpg-cppvheo8fa8c739n4kbg-a.oregon-postgres.render.com/postgre_m9bf'
 db=SQLAlchemy(app)
 #engine=create_engine('postgresql://root:PYohqeXEmcz8aLiJINZ7VGVbjbCgDcCe@dpg-cnrv0pol5elc73b39vgg-a.oregon-postgres.render.com/ram_mqj4')
 if not os.path.exists(app.config['upload_folder']):
@@ -193,8 +194,10 @@ def student():
         
         
 @app.route("/adcon")
+#tried to add new feature that's why con adn usdata exist.
 def adcon():
-    return render_template("adcon.html")
+    #con()
+    return render_template("adcon.html")#, usdata=usdata)
     
 
 @app.route("/admin", methods=["GET", "POST"])
@@ -235,5 +238,5 @@ def admin():
             db.session.close()
     return render_template("admin.html")
 
-'''if __name__ == "__main__":
-    app.run(debug=True)'''
+if __name__ == "__main__":
+    app.run(debug=True)
